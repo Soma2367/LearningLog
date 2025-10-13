@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+/**
+ * @method bool isTeacher()
+ * @method bool isStudent()
+ */
+
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -21,6 +26,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
+        'teacher_id',
     ];
 
     /**
@@ -45,4 +52,24 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+     public function isTeacher(): bool
+    {
+        return $this->role === 'teacher';
+    }
+
+    public function isStudent(): bool
+    {
+        return $this->role === 'student';
+    }
+
+    public function students() {
+        return $this->hasMany(User::class, 'teacher_id');
+    }
+
+    public function teacher() {
+        return $this->belongsTo(User::class, 'teacher_id');
+    }
 }
+
+

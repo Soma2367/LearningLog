@@ -9,6 +9,21 @@
             <x-input-error :messages="$errors->get('name')" class="mt-2" />
         </div>
 
+        <!-- Role -->
+         <div class="mt-4">
+            <x-input-label for="role" :value="__('Role')"/>
+            <select
+              name="role"
+              id="role"
+              class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+             >
+                <option value="">選択してください</option>
+                <option value="teacher" {{ old('role') == 'teacher' ? 'selected' : '' }}>先生</option>
+                <option value="student" {{ old('role') == 'student' ? 'selected' : '' }}>生徒</option>
+            </select>
+             <x-input-error :messages="$errors->get('role')" class="mt-2" />
+         </div>
+
         <!-- Email Address -->
         <div class="mt-4">
             <x-input-label for="email" :value="__('Email')" />
