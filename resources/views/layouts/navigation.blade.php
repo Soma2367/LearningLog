@@ -10,11 +10,20 @@
                     </a>
                 </div>
 
-                <!-- Navigation Links -->
+                <!-- Navigation Links : role-based conditional branching -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
+                    @if(auth()->check() && auth()->user()->isTeacher())
+                     <x-nav-link :href="route('teacher.dashboard')" :active="request()->routeIs('teacher.dashboard')">
+                        {{ __('先生ダッシュボード')}}
+                     </x-nav-link>
+                    @else
+                     <x-nav-link :href="route('student.dashboard')" :active="request()->routeIs('student.dashboard')">
+                        {{ __('生徒ダッシュボード')}}
+                      </x-nav-link>
+                      <x-nav-link :href="route('student.daily_study_logs.index')" :active="request()->routeIs('student.daily_study_logs.index')">
+                        {{ __(auth()->user()->name.'の学習記録')}}
+                      </x-nav-link>
+                    @endif
                 </div>
             </div>
 
