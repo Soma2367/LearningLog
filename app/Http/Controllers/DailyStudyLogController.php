@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DailyStudyLog;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DailyStudyLogController extends Controller
 {
@@ -11,7 +13,7 @@ class DailyStudyLogController extends Controller
      */
     public function index()
     {
-        //
+        return view('student.daily_study_logs.index');
     }
 
     /**
@@ -19,7 +21,7 @@ class DailyStudyLogController extends Controller
      */
     public function create()
     {
-        //
+        return view('student.daily_study_logs.create');
     }
 
     /**
@@ -27,7 +29,19 @@ class DailyStudyLogController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'title' => 'required | string | max:30',
+            'content' => 'required | string | max:600',
+            'study_time' => 'required',
+            'study_date' => 'required',
+            'progress_rating' => 'required | integer | min:1 | max:5',
+        ]);
+
+        $validated['student_id'] = Auth::id();
+
+        $log = DailyStudyLog::create($validated);
+
+        return redirect()->route('student.daily_study_logs.index');
     }
 
     /**

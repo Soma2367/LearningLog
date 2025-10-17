@@ -19,12 +19,14 @@ return new class extends Migration
                   ->comment('生徒ID');
             $table->string('title');
             $table->text('content');
+            $table->time('study_time');
             $table->date('study_date');
             $table->unsignedTinyInteger('progress_rating')
                   ->nullable()
                   ->comment('5段階評価');
             $table->text('teacher_feedback')->nullable();
             $table->timestamp('teacher_viewed_at')->nullable();
+            $table->timestamps();
         });
     }
 

@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\DailyStudyLogController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -25,6 +26,7 @@ Route::middleware(['auth', 'student'])->prefix('student')->name('student.')->gro
     Route::get('/dashboard', function() {
         return view('student.dashboard');
     })->name('dashboard');
+    Route::resource('daily_study_logs', DailyStudyLogController::class);
 });
 
 
