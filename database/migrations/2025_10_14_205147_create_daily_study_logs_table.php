@@ -25,7 +25,6 @@ return new class extends Migration
                   ->nullable()
                   ->comment('5段階評価');
             $table->text('teacher_feedback')->nullable();
-            $table->timestamp('teacher_viewed_at')->nullable();
             $table->timestamps();
         });
     }
