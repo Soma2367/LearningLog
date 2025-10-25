@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Student;
 
+use App\Http\Controllers\Controller;
 use App\Models\DailyStudyLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,7 +14,11 @@ class DailyStudyLogController extends Controller
      */
     public function index()
     {
-        return view('student.daily_study_logs.index');
+        $logs = DailyStudyLog::where('student_id', Auth::id())
+                            ->orderBy('study_date', 'desc')
+                            ->paginate(6);
+
+        return view('student.daily_study_logs.index', compact('logs'));
     }
 
     /**
@@ -49,7 +54,7 @@ class DailyStudyLogController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $logs = DailyStudyLog::where('student_id', Auth::id());
     }
 
     /**
