@@ -70,6 +70,11 @@ class User extends Authenticatable
     public function teacher() {
         return $this->belongsTo(User::class, 'teacher_id');
     }
+
+    public function studyLogs() {
+        return $this->hasMany(DailyStudyLog::class, 'student_id');
+    }
+
 }
 
 
