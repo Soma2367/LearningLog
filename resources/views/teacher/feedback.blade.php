@@ -58,18 +58,32 @@
                             <p class="text-sm text-gray-500 mt-1">最大1000文字</p>
                         </div>
 
-                        <div class="flex gap-4">
-                            <button
+                        <div class="flex justify-between items-center gap-4">
+                            <div class="flex gap-4">
+                              <button
                                 type="submit"
                                 class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold shadow-md transition">
                                 {{ $log->hasFeedback() ? 'フィードバックを更新' : 'フィードバックを送信' }}
-                            </button>
+                             </button>
 
-                            <a href="{{ route('teacher.student.logs', $log->student_id) }}"
+                             <a href="{{ route('teacher.student.logs', $log->student_id) }}"
                                class="px-6 py-3 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 font-semibold transition">
                                 キャンセル
-                            </a>
+                             </a>
+                            </div>
+
+                            <button
+                             type="button"
+                             onclick="if(confirm('本当に削除しますか？')) document.getElementById('delete-form').submit()"
+                             class="px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 font-semibold shadow-md transition"
+                             >
+                            記録削除
+                        </button>
                         </div>
+                    </form>
+                    <form id="delete-form" action="{{ route('teacher.student.log.destroy', $log) }}" method="POST" style="display: none;">
+                         @csrf
+                         @method('DELETE')
                     </form>
 
                 </div>

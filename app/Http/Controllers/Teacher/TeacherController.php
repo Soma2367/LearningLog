@@ -11,7 +11,7 @@ use App\Models\User;
 class TeacherController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the resou２２２３rce.
      */
     public function dashboard()
     {
@@ -96,8 +96,15 @@ class TeacherController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function deleteLog(DailyStudyLog $log)
     {
-        //
+        $teacher = Auth::user();
+
+        if($log->student->teacher_id !== $teacher->id) {
+            abort(403, '削除権限がありません。');
+        }
+
+        $log->delete();
+        return redirect()->route('teacher.dashboard');
     }
 }

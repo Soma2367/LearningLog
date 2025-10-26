@@ -22,6 +22,7 @@ Route::middleware(['auth', 'teacher'])->prefix('teacher')->name('teacher.')->gro
      Route::get('/student_logs/{student}', [TeacherController::class, 'studentLogs'])->name('student.logs');
      Route::get('/feedback/{log}', [TeacherController::class, 'showFeedback'])->name('feedback.show');
      Route::post('/feedback/{log}', [TeacherController::class, 'storeFeedback'])->name('feedback.store');
+     Route::delete('/student)_logs/{log}', [TeacherController::class, 'deleteLog'])->name('student.log.destroy');
 });
 
 Route::middleware(['auth', 'student'])->prefix('student')->name('student.')->group(function() {
