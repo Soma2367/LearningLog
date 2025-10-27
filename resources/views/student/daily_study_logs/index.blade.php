@@ -35,21 +35,16 @@
                                 <div>
                                     <p class="text-cyan-100 text-sm">総学習時間</p>
                                     @php
-                                      $totalMinutes = $logs->sum(function($log) {
-                                          // 空文字や不正な形式を安全に処理
+                                        $totalMin = $logs->sum(function($log) {
                                             $time = explode(':', $log->study_time);
+                                            return ((int)($time[0] ?? 0) * 60) + (int)($time[1] ?? 0);
+                                        });
 
-                                          $hours = isset($time[0]) ? (int)$time[0] : 0;
-                                          $minutes = isset($time[1]) ? (int)$time[1] : 0;
-
-                                          return ($hours * 60) + $minutes;
-                                      });
-
-                                      $totalHours = floor($totalMinutes / 60);
-                                      $remainingMinutes = $totalMinutes % 60;
+                                        $totalHor = floor($totalMin / 60);
+                                        $remainingMin = $totalMin % 60;
                                     @endphp
                                     <p class="text-2xl font-bold text-white">
-                                        {{ $totalHours }}時間{{ $remainingMinutes > 0 ? $remainingMinutes . '分' : '' }}
+                                        {{ $totalHor }}時間{{ $remainingMin > 0 ? $remainingMin . '分' : '' }}
                                     </p>
                                 </div>
                                 <div class="bg-white/20 p-3 rounded-lg">

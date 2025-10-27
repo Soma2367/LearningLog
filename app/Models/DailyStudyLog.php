@@ -12,7 +12,7 @@ class DailyStudyLog extends Model
 
     protected $casts = [
         'study_date' => 'date',
-        'study_time' => 'integer',
+        'study_time' => 'string',
         'progress_rating' => 'integer',
     ];
 
