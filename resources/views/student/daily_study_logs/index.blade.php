@@ -17,32 +17,11 @@
                     </div>
 
                     <!-- 統計カード -->
-                    <div class="grid grid-cols-4 gap-4 mt-6">
-                        <div class="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <p class="text-cyan-100 text-sm">今月の学習</p>
-                                    <p class="text-2xl font-bold text-white">{{ $logs->where('study_date', '>=', now()->startOfMonth())->count() }}日</p>
-                                </div>
-                                <div class="bg-white/20 p-3 rounded-lg">
-                                    <x-heroicon-s-calendar class="w-6 h-6 text-white" />
-                                </div>
-                            </div>
-                        </div>
-
+                    <div class="grid grid-cols-3 gap-4 mt-6">
                         <div class="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
                             <div class="flex items-center justify-between">
                                 <div>
                                     <p class="text-cyan-100 text-sm">総学習時間</p>
-                                    @php
-                                        $totalMin = $logs->sum(function($log) {
-                                            $time = explode(':', $log->study_time);
-                                            return ((int)($time[0] ?? 0) * 60) + (int)($time[1] ?? 0);
-                                        });
-
-                                        $totalHor = floor($totalMin / 60);
-                                        $remainingMin = $totalMin % 60;
-                                    @endphp
                                     <p class="text-2xl font-bold text-white">
                                         {{ $totalHor }}時間{{ $remainingMin > 0 ? $remainingMin . '分' : '' }}
                                     </p>
@@ -72,34 +51,16 @@
                                     @php
                                         $consecutiveDays = 0;
                                         $sortedLogs = $logs->sortByDesc('study_date');
-                                        $today = \Carbon\Carbon::today();
-                                        $checkDate = $today;
-                                        // 今日または昨日に記録があるかチェック
-                                        $hasRecentLog = $sortedLogs->contains(function($log) use ($today) {
+                                        $checkDate = \Carbon\Carbon::today();
+
+                                        foreach($sortedLogs as $log) {
                                             $studyDate = \Carbon\Carbon::parse($log->study_date);
-                                            return $studyDate->isToday() || $studyDate->isYesterday();
-                                        });
-                                        if ($hasRecentLog) {
-                                            foreach ($sortedLogs as $log) {
-                                                $studyDate = \Carbon\Carbon::parse($log->study_date);
-                                                // 最初の記録から開始日を設定
-                                                if ($consecutiveDays === 0) {
-                                                    if ($studyDate->isToday() || $studyDate->isYesterday()) {
-                                                        $checkDate = $studyDate;
-                                                        $consecutiveDays = 1;
-                                                    } else {
-                                                        break;
-                                                    }
-                                                } else {
-                                                    // 前日の記録があるかチェック
-                                                    if ($studyDate->isSameDay($checkDate->copy()->subDay())) {
-                                                        $consecutiveDays++;
-                                                        $checkDate = $studyDate;
-                                                    } else if (!$studyDate->isSameDay($checkDate)) {
-                                                        // 連続が途切れた
-                                                        break;
-                                                    }
-                                                }
+
+                                            if($studyDate->isSameDay($checkDate)) {
+                                                $consecutiveDays++;
+                                                $checkDate = $checkDate->subDay();
+                                            } else {
+                                                break;
                                             }
                                         }
                                     @endphp

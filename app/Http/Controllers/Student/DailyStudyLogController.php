@@ -14,11 +14,25 @@ class DailyStudyLogController extends Controller
      */
     public function index()
     {
+        //ページネーション用
         $logs = DailyStudyLog::where('student_id', Auth::id())
                             ->orderBy('study_date', 'desc')
                             ->paginate(6);
 
-        return view('student.daily_study_logs.index', compact('logs'));
+        //学習用
+        $totalMin = DailyStudyLog::where('student_id', Auth::id())
+                               ->get()
+                               ->sum(function($log) {
+                                $time = explode(':', $log->study_time);
+                                return (int)$time[0] * 60 + (int)$time[1];
+                               });
+
+
+        $totalHor = floor($totalMin / 60);
+        $remainingMin = $totalHor % 60;
+
+
+        return view('student.daily_study_logs.index', compact('logs', 'totalHor', 'remainingMin'));
     }
 
     /**
