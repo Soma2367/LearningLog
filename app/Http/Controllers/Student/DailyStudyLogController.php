@@ -6,33 +6,26 @@ use App\Http\Controllers\Controller;
 use App\Models\DailyStudyLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Services\StudyLogService;
 
 class DailyStudyLogController extends Controller
 {
+    public function __construct(private StudyLogService $studyLogService) {}
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //ページネーション用
-        $logs = DailyStudyLog::where('student_id', Auth::id())
-                            ->orderBy('study_date', 'desc')
-                            ->paginate(6);
+        $studentId = Auth::id();
 
-        //学習用
-        $totalMin = DailyStudyLog::where('student_id', Auth::id())
-                               ->get()
-                               ->sum(function($log) {
-                                $time = explode(':', $log->study_time);
-                                return (int)$time[0] * 60 + (int)$time[1];
-                               });
+        $logs = $this->studyLogService->getStudentLogs($studentId, perPage: 6);
+        $total = $this->studyLogService->calculateTotalStudyTime($studentId);
+        $totalHour = $total['hour'];
+        $remainingMin = $total['min'];
 
+        $consecutiveDays = $this->studyLogService->calculateConsecutiveDays($studentId);
 
-        $totalHor = floor($totalMin / 60);
-        $remainingMin = $totalHor % 60;
-
-
-        return view('student.daily_study_logs.index', compact('logs', 'totalHor', 'remainingMin'));
+        return view('student.daily_study_logs.index', compact('logs', 'totalHour', 'remainingMin','consecutiveDays'));
     }
 
     /**

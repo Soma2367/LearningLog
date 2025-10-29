@@ -23,7 +23,7 @@
                                 <div>
                                     <p class="text-cyan-100 text-sm">総学習時間</p>
                                     <p class="text-2xl font-bold text-white">
-                                        {{ $totalHor }}時間{{ $remainingMin > 0 ? $remainingMin . '分' : '' }}
+                                        {{ $totalHour }}時間{{ $remainingMin > 0 ? $remainingMin . '分' : '' }}
                                     </p>
                                 </div>
                                 <div class="bg-white/20 p-3 rounded-lg">
@@ -48,22 +48,6 @@
                             <div class="flex items-center justify-between">
                                 <div>
                                     <p class="text-cyan-100 text-sm">連続記録</p>
-                                    @php
-                                        $consecutiveDays = 0;
-                                        $sortedLogs = $logs->sortByDesc('study_date');
-                                        $checkDate = \Carbon\Carbon::today();
-
-                                        foreach($sortedLogs as $log) {
-                                            $studyDate = \Carbon\Carbon::parse($log->study_date);
-
-                                            if($studyDate->isSameDay($checkDate)) {
-                                                $consecutiveDays++;
-                                                $checkDate = $checkDate->subDay();
-                                            } else {
-                                                break;
-                                            }
-                                        }
-                                    @endphp
                                     <p class="text-2xl font-bold text-white">{{ $consecutiveDays }}日</p>
                                 </div>
                                 <div class="bg-white/20 p-3 rounded-lg">
