@@ -10,12 +10,9 @@ use App\Models\User;
 
 class TeacherController extends Controller
 {
-    /**
-     * Display a listing of the resou２２２３rce.
-     */
     public function dashboard()
     {
-        $teacher = Auth::user();
+        $teacher = Auth::user()->teacher;
 
         $students = $teacher->students()
             ->withCount('studyLogs')
@@ -29,7 +26,7 @@ class TeacherController extends Controller
      */
     public function studentLogs(User $student)
     {
-        $teacher = Auth::user();
+        $teacher = Auth::user()->teacher;
 
         if($student->teacher_id !== $teacher->id) {
             abort(403, 'この生徒の記録を閲覧する権限がありません。');

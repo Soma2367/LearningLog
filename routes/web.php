@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Student\DailyStudyLogController;
 use App\Http\Controllers\Teacher\TeacherController;
+use App\Http\Controllers\Teacher\StudentInvitationController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -18,7 +19,8 @@ Route::get('/dashboard', function () {
 })->middleware('auth')->name('dashboard');
 
 Route::middleware(['auth', 'teacher'])->prefix('teacher')->name('teacher.')->group(function() {
-    Route::get('/dashboard', [TeacherController::class, 'dashboard'])->name('dashboard');
+     Route::get('/dashboard', [TeacherController::class, 'dashboard'])->name('dashboard');
+     Route::get('/invitation', [StudentInvitationController::class, 'index'])->name('invitation.index');
      Route::get('/student_logs/{student}', [TeacherController::class, 'studentLogs'])->name('student.logs');
      Route::get('/feedback/{log}', [TeacherController::class, 'showFeedback'])->name('feedback.show');
      Route::post('/feedback/{log}', [TeacherController::class, 'storeFeedback'])->name('feedback.store');

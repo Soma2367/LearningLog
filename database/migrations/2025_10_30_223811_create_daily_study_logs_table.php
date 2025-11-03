@@ -6,15 +6,12 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('daily_study_logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('student_id')
-                  ->constrained('users')
+                  ->constrained('students')
                   ->cascadeOnDelete()
                   ->comment('生徒ID');
             $table->string('title');
@@ -24,14 +21,13 @@ return new class extends Migration
             $table->unsignedTinyInteger('progress_rating')
                   ->nullable()
                   ->comment('5段階評価');
-            $table->text('teacher_feedback')->nullable();
+            $table->text('teacher_feedback')
+                  ->nullable()
+                  ->comment('先生からのフィードバック');
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('daily_study_logs');

@@ -6,18 +6,24 @@ use Illuminate\Database\Eloquent\Model;
 
 class DailyStudyLog extends Model
 {
-    protected $guarded = [
-        'teacher_feedback'
+    protected $fillable = [
+        'student_id',
+        'title',
+        'content',
+        'study_time',
+        'study_date',
+        'progress_rating',
+        'teacher_feedback',
     ];
 
     protected $casts = [
-        'study_date' => 'date',
         'study_time' => 'string',
+        'study_date' => 'date',
         'progress_rating' => 'integer',
     ];
 
     public function student() {
-        return $this->belongsTo(User::class, 'student_id');
+        return $this->belongsTo(Student::class);
     }
 
     public function hasFeedback(): bool

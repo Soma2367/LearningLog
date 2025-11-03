@@ -23,6 +23,11 @@
                             <x-heroicon-o-academic-cap class="w-5 h-5 mr-2" />
                             {{ __('先生ダッシュボード')}}
                         </x-nav-link>
+                        <x-nav-link :href="route('teacher.invitation.index')" :active="request()->routeIs('teacher.invitation.index')"
+                                    class="inline-flex items-center px-4 py-2 border-b-2 text-sm font-semibold leading-5 focus:outline-none">
+                            <x-heroicon-o-academic-cap class="w-5 h-5 mr-2" />
+                            {{ __('先生招待')}}
+                        </x-nav-link>
                     @else
                         <x-nav-link :href="route('student.daily_study_logs.index')" :active="request()->routeIs('student.daily_study_logs.index')"
                                     class="inline-flex items-center px-4 py-2 border-b-2 text-sm font-semibold leading-5 focus:outline-none">
@@ -102,6 +107,11 @@
                                       class="flex items-center">
                     <x-heroicon-o-academic-cap class="w-5 h-5 mr-2" />
                     {{ __('先生ダッシュボード') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('teacher.invitation.index')" :active="request()->routeIs('teacher.invitation.index')"
+                                      class="flex items-center">
+                    <x-heroicon-o-academic-cap class="w-5 h-5 mr-2" />
+                    {{ __('先生招待') }}
                 </x-responsive-nav-link>
             @else
                 <x-responsive-nav-link :href="route('student.daily_study_logs.index')" :active="request()->routeIs('student.daily_study_logs.index')"
