@@ -1,27 +1,41 @@
 <?php
 
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
-use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+
+// StudentController
+use App\Http\Controllers\Student\Auth\AuthenticatedSessionController as StudentAuthController;
+use App\Http\Controllers\Student\Auth\RegisteredUserController as StudentRegisterController;
+
+// TeacherController
+use App\Http\Controllers\Teacher\Auth\AuthenticatedSessionController as TeacherAuthController;
+use App\Http\Controllers\Teacher\Auth\RegisteredUserController as TeacherRegisterController;
+
 use Illuminate\Support\Facades\Route;
 
+// Teacher
+Route::middleware('guest')->prefix('teacher')->name('teacher.')->group(function () {
+    Route::get('register', [TeacherRegisterController::class, 'create'])->name('register');
+    Route::post('register', [TeacherRegisterController::class, 'store']);
+    Route::get('login', [TeacherAuthController::class, 'create'])->name('login');
+    Route::post('login', [TeacherAuthController::class, 'store']);
+});
+
+// Student
+Route::middleware('guest')->prefix('student')->name('student.')->group(function () {
+    Route::get('register', [StudentRegisterController::class, 'create'])->name('register');
+    Route::post('register', [StudentRegisterController::class, 'store']);
+    Route::get('login', [StudentAuthController::class, 'create'])->name('login');
+    Route::post('login', [StudentAuthController::class, 'store']);
+});
+
+//common
 Route::middleware('guest')->group(function () {
-    Route::get('register', [RegisteredUserController::class, 'create'])
-        ->name('register');
-
-    Route::post('register', [RegisteredUserController::class, 'store']);
-
-    Route::get('login', [AuthenticatedSessionController::class, 'create'])
-        ->name('login');
-
-    Route::post('login', [AuthenticatedSessionController::class, 'store']);
-
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
         ->name('password.request');
 
@@ -35,6 +49,7 @@ Route::middleware('guest')->group(function () {
         ->name('password.store');
 });
 
+//common
 Route::middleware('auth')->group(function () {
     Route::get('verify-email', EmailVerificationPromptController::class)
         ->name('verification.notice');
@@ -53,7 +68,14 @@ Route::middleware('auth')->group(function () {
     Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
 
     Route::put('password', [PasswordController::class, 'update'])->name('password.update');
+});
 
-    Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
-        ->name('logout');
+// Teacher-logout
+Route::middleware('auth')->prefix('teacher')->name('teacher.')->group(function() {
+    Route::post('logout', [TeacherAuthController::class, 'destroy'])->name('logout');
+});
+
+// Student-logout
+Route::middleware('auth')->prefix('student')->name('student.')->group(function() {
+    Route::post('logout', [StudentAuthController::class, 'destroy'])->name('logout');
 });

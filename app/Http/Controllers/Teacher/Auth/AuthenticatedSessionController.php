@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Teacher\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use App\Models\User;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -16,7 +17,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): View
     {
-        return view('auth.login');
+        return view('teacher.auth.login');
     }
 
     /**
@@ -26,9 +27,16 @@ class AuthenticatedSessionController extends Controller
     {
         $request->authenticate();
 
+        if(!$request->user()->isTeacher()) {
+            Auth::logout();
+            return back()->withError([
+                'email' => '教師アカウントでログインしてください。',
+            ])->onlyInput('email');
+        }
+
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        return redirect()->intended(route('teacher.dashboard', absolute: false));
     }
 
     /**
@@ -42,6 +50,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect()->route('teacher.login');
     }
 }
