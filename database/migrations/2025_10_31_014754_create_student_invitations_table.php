@@ -27,6 +27,8 @@ return new class extends Migration
                   ->nullable()
                   ->constrained('students')
                   ->nullOnDelete();
+            $table->timestamp('expires_at')
+                  ->nullable();
             $table->timestamps();
             $table->index(['code', 'used']);
         });
