@@ -6,39 +6,69 @@
     </x-slot>
 
     <div class="min-h-screen bg-gray-50">
-        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-            <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
-                <!-- フォームヘッダー -->
-                <div class="bg-gradient-to-br from-cyan-50 to-teal-50 px-8 py-6 border-b border-gray-200">
-                    <div class="flex items-center">
-                        <div>
-                            <h3 class="text-lg font-bold text-gray-900">招待コード</h3>
-                        </div>
-                    </div>
-                </div>
-                <form method="POST" action="{{ route('student.daily_study_logs.store') }}" class="p-8 space-y-6">
-                    @csrf
+        <div class="max-w-3xl mx-auto px-4 my-4">
 
-                    <div>
-                        <label for="title" class="flex items-center font-semibold text-gray-900 mb-2">
-                            <x-heroicon-o-document-text class="w-5 h-5 text-cyan-600 mr-2" />
-                            送信先メールアドレス
-                            <span class="ml-2 text-xs font-normal text-red-500">*必須</span>
-                        </label>
-                        <input type="mail" name="title" id="title"
-                            class="w-full py-3 px-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent hover:border-gray-300"
-                            placeholder="someone@gmail.com"
-                            value="{{old('title')}}">
-                        <x-input-error :messages="$errors->get('title')" class="mt-2"/>
-                    </div>
-                    <div class="flex justify-center">
-                        <button
-                          type="button"
-                          class="inline-flex items-center px-5 py-3  border border-transparent rounded-lg font-semibold text-base text-white uppercase tracking-widest bg-blue-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150"
-                        >
-                            送信
+            @if(session('success'))
+              <div class="bg-green-100 border border-green-400 text-green-700 px-6 py-4 rounded-lg mb-6">
+                {{ session('success') }}
+              </div>
+            @endif
+            <div class="bg-white rounded-2xl shadow-xl overflow-hidden mb-6">
+                <div class="bg-gradient-to-br from-cyan-50 to-teal-50 px-8 py-6 border-b border-gray-200">
+                    <h3 class="text-lg font-bold text-gray-900">新しい招待コード</h3>
+                </div>
+
+                <div class="px-8 py-6" >
+                    <form action="{{ route('teacher.invitation.store') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="bg-cyan-500 text-white px-6 py-3 rounded-lg hover:from-cyan-600 hover:to-teal-600 transition">
+                            コード生成
                         </button>
-                    </div>
+                    </form>
+                </div>
+
+                 <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+                <div class="bg-gradient-to-br from-cyan-50 to-teal-50 px-8 py-6 border-b border-gray-200">
+                    <h3 class="text-lg font-bold text-gray-900">招待コード一覧</h3>
+                </div>
+
+                <div class="divide-y divide-gray-200">
+                    @forelse($invitations as $invitation)
+                        <div class="px-8 py-4 flex items-center justify-between">
+                            <div>
+                                <p class="font-mono text-2xl font-bold text-gray-900">
+                                    {{ $invitation->code }}
+                                </p>
+                                <p class="text-sm text-gray-500 mt-1">
+                                    作成日時: {{ $invitation->created_at->format('Y年m月d日 H:i') }}
+                                </p>
+                            </div>
+
+                            <div class="text-right">
+                                @if($invitation->used)
+                                    <span class="inline-block bg-gray-100 text-gray-600 px-4 py-2 rounded-full text-sm">
+                                        使用済み
+                                    </span>
+                                    @if($invitation->student)
+                                        <p class="text-xs text-gray-500 mt-1">
+                                            使用者: {{ $invitation->student->user->name }}
+                                        </p>
+                                    @endif
+                                @else
+                                    <span class="inline-block bg-green-100 text-green-700 px-4 py-2 rounded-full text-sm font-semibold">
+                                        未使用
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+                    @empty
+                        <div class="px-8 py-12 text-center text-gray-500">
+                            招待コードがまだありません
+                        </div>
+                    @endforelse
+                </div>
+            </div>
+            </div>
         </div>
     </div>
 </x-app-layout>

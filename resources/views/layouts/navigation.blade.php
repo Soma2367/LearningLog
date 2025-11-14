@@ -72,10 +72,10 @@
                         </x-dropdown-link>
 
                         <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
+                        <form method="POST" action="{{ route('teacher.logout') }}">
                             @csrf
 
-                            <x-dropdown-link :href="route('logout')"
+                            <x-dropdown-link :href="route('teacher.logout')"
                                     onclick="event.preventDefault();
                                                 this.closest('form').submit();"
                                     class="flex items-center text-red-600 hover:bg-red-50">
@@ -145,10 +145,10 @@
                 </x-responsive-nav-link>
 
                 <!-- Authentication -->
-                <form method="POST" action="{{ route('logout') }}">
+                <form method="POST" action="{{ route('teacher.logout') }}">
                     @csrf
 
-                    <x-responsive-nav-link :href="route('logout')"
+                    <x-responsive-nav-link :href="route('teacher.logout')"
                             onclick="event.preventDefault();
                                         this.closest('form').submit();"
                             class="flex items-center text-red-600">

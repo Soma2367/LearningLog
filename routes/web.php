@@ -7,15 +7,26 @@ use App\Http\Controllers\Student\DailyStudyLogController;
 use App\Http\Controllers\Teacher\TeacherController;
 use App\Http\Controllers\Teacher\StudentInvitationController;
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/teacher', function () {
+    return view('welcomeTeacher');
+});
+
+Route::get('/student', function () {
+    return view('welcomeStudent');
 });
 
 Route::get('/dashboard', function () {
-    if (Auth::check() && Auth::user()->isTeacher()) {
+    $user = Auth::user();
+
+    if ($user->isTeacher()) {
         return redirect()->route('teacher.dashboard');
     }
-    return redirect()->route('student.daily_study_logs.index');
+
+    if ($user->isStudent()) {
+        return redirect()->route('student.dashboard');
+    }
+
+    abort(403, 'アクセス権限がありません。');
 })->middleware('auth')->name('dashboard');
 
 Route::middleware(['auth', 'teacher'])->prefix('teacher')->name('teacher.')->group(function() {
@@ -24,7 +35,8 @@ Route::middleware(['auth', 'teacher'])->prefix('teacher')->name('teacher.')->gro
      Route::get('/student_logs/{student}', [TeacherController::class, 'studentLogs'])->name('student.logs');
      Route::get('/feedback/{log}', [TeacherController::class, 'showFeedback'])->name('feedback.show');
      Route::post('/feedback/{log}', [TeacherController::class, 'storeFeedback'])->name('feedback.store');
-     Route::delete('/student)_logs/{log}', [TeacherController::class, 'deleteLog'])->name('student.log.destroy');
+     Route::post('/invitation', [StudentInvitationController::class, 'store'])->name('invitation.store');
+     Route::delete('/student_logs/{log}', [TeacherController::class, 'deleteLog'])->name('student.log.destroy');
 });
 
 Route::middleware(['auth', 'student'])->prefix('student')->name('student.')->group(function() {
